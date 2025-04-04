@@ -1,41 +1,68 @@
 import React, { useState } from 'react';
 import ProductCard from './components/ProductCard';
-import './App.css';
 
-const initialProducts = [
+// Static data for products
+const products = [
   {
     id: 1,
-    name: "Wireless Headphones",
-    description: "High-quality sound with noise cancellation.",
-    image: "https://picsum.photos/300/200?random=1",
-    avgRating: 4.2,
-    totalRatings: 10
+    name: "Laptop",
+    description: "High-performance laptop for work and play.",
+    image: "https://example.com/laptop.jpg",
+    avgRating: 4.5,
+    totalRatings: 10,
   },
   {
     id: 2,
-    name: "Smartwatch",
-    description: "Track your fitness and notifications.",
-    image: "https://picsum.photos/300/200?random=2",
-    avgRating: 3.8,
-    totalRatings: 15
+    name: "Smartphone",
+    description: "Sleek and fast smartphone with a high-quality camera.",
+    image: "https://example.com/smartphone.jpg",
+    avgRating: 4.0,
+    totalRatings: 15,
   },
   {
     id: 3,
-    name: "Portable Speaker",
-    description: "Powerful sound in a compact design.",
-    image: "https://picsum.photos/300/200?random=3",
-    avgRating: 4.5,
-    totalRatings: 8
+    name: "Headphones",
+    description: "Noise-canceling headphones with superb sound quality.",
+    image: "https://example.com/headphones.jpg",
+    avgRating: 3.8,
+    totalRatings: 8,
   }
 ];
 
 function App() {
+  const [productList, setProductList] = useState(products);
 
- 
+  // Handle rating submission for a product
+  const handleRatingSubmit = (productId, newRating) => {
+    const updatedProducts = productList.map(product => {
+      if (product.id === productId) {
+        const newAvgRating = (
+          (product.avgRating * product.totalRatings + newRating) /
+          (product.totalRatings + 1)
+        ).toFixed(1);
+
+        return {
+          ...product,
+          avgRating: parseFloat(newAvgRating),
+          totalRatings: product.totalRatings + 1
+        };
+      }
+      return product;
+    });
+
+    setProductList(updatedProducts);
+  };
 
   return (
-    <div>
-     {/* code here */}
+    <div className="app">
+      <h1>Product Ratings</h1>
+      {productList.map(product => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onRatingSubmit={handleRatingSubmit}
+        />
+      ))}
     </div>
   );
 }
